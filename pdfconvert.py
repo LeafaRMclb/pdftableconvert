@@ -1,3 +1,6 @@
+"Credits to Michiaki Ariga (https://github.com/chezou) for developing the AMAZING open-source tabula-java wrapper called tabula-py"
+
+
 import sys
 import os
 from PyQt5.QtWidgets import *
