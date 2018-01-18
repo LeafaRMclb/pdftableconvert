@@ -1,3 +1,6 @@
+Include/
+Lib/
+Scripts/
 Output.csv
 pyvenv.cfg
 pip-selfcheck.json
