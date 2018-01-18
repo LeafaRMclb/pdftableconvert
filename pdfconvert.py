@@ -11,7 +11,7 @@ import tabula
 #from pandas import read_sql
 
 
-class Clock(QMainWindow):
+class Converter(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -51,31 +51,10 @@ class Clock(QMainWindow):
         grid.addWidget(self.btn_showFile, 3, 0)
         grid.addWidget(self.btn_getPages, 1, 1)
 
-        
-        
-        
-
         self.statusBar()
-        
-        
-        #menubar = self.menuBar()
-        #fileMenu = menubar.addMenu('&File')
-        #fileMenu.addAction()
-
-        #impMenu = QMenu('Import', self)
-       # impAct = QAction('Import mail', self) 
-        #impMenu.addAction(impAct)
-
-        #newAct = QAction('New', self)        
-        
-        #fileMenu.addAction(newAct)
-        #fileMenu.addMenu(impMenu)
-
 
         centralwidget.setLayout(grid)
-
         self.setCentralWidget(centralwidget)
-
         self.center()
         self.show()
     
@@ -96,8 +75,6 @@ class Clock(QMainWindow):
             QMessageBox.information(self, 'Warning', "You did not select a .pdf file")
             self.openFileNameDialog()
             
-            
-
     def getPages(self):
         global page
         page, okPressed = QInputDialog.getText(self, "Message","Pages:", QLineEdit.Normal, "")
@@ -106,32 +83,9 @@ class Clock(QMainWindow):
         else:
             self.getPages()
 
-
     def showFile(self):
         os.startfile("Output.csv")
         self.statusBar().showMessage('')
-        
-        
-       
-            
-        
-
-        #if not os.kill("Output.csv"):
-            
-            
-        
-        #else:
-            #QMessageBox.information(self, 'WARNING!', "You should close the output file first!")
-
-                
-
-            
-
-
-            
-    
-            #os.startfile(usefile)
-            
 
     def Convert(self):
         try:
@@ -140,51 +94,6 @@ class Clock(QMainWindow):
 
         except:
             QMessageBox.information(self, 'WARNING!', "You should close the output file first!")
-
-        
-        
-        
-
-    
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     def center(self):
@@ -196,5 +105,5 @@ class Clock(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    win = Clock()
+    win = Converter()
     sys.exit(app.exec_())
