@@ -1,4 +1,4 @@
 *.log
-Output.csv
-pyvenv.cfg
+*.csv
+*.cfg
 pip-selfcheck.json
