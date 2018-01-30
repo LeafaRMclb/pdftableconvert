@@ -3,5 +3,3 @@ the PDF Tables to CSV project.
 Thanks to Aki Ariga https://github.com/chezou for developing the tabula 
 wrapper for python. 
 (C) 2018 Rafael Macalaba
-Economics
-Thomson Reuters
