@@ -32,7 +32,7 @@ class Converter(QMainWindow):
 
         self.btn_convert = QPushButton("Convert", self)
         self.btn_convert.clicked.connect(self.Convert)
-        self.btn_convert.setEnabled(False)
+        #self.btn_convert.setEnabled(False)
 
         self.btn_showFile = QPushButton("Show File", self)
         self.btn_showFile.clicked.connect(self.showFile)
@@ -50,9 +50,9 @@ class Converter(QMainWindow):
         grid = QGridLayout()
 
         grid.addWidget(self.btn_file, 1, 0)
-        grid.addWidget(self.btn_convert, 2, 0)
-        grid.addWidget(self.btn_showFile, 3, 0)
-        grid.addWidget(self.btn_getPages, 1, 1)
+        grid.addWidget(self.btn_convert, 3, 0)
+        grid.addWidget(self.btn_showFile, 4, 0)
+        grid.addWidget(self.btn_getPages, 2, 0)
 
         self.statusBar()
 
@@ -72,7 +72,8 @@ class Converter(QMainWindow):
             usefile = fileName
             QMessageBox.information(self, 'Message', "File used: %s" % usefile)
         #    self.getPages()
-            self.btn_convert.setEnabled(True)
+            #self.btn_convert.setEnabled(True)
+            self.make_directory()
         
         else:
             QMessageBox.information(self, 'Warning', "You did not select a .pdf file")
@@ -87,16 +88,19 @@ class Converter(QMainWindow):
             self.getPages()
 
     def showFile(self):
-        os.startfile("Output.csv")
-        self.statusBar().showMessage('')
+        try:
+            os.startfile("C:/OutputFolder/Output.csv")
+            self.statusBar().showMessage('')
+        except:
+            QMessageBox.information(self, 'Warning', "Output file not created!")
 
     def Convert(self):
         try:
-            tabula.convert_into("%s" % usefile, "Output.csv", output_format="csv", pages ="%s" % page)
+            tabula.convert_into("%s" % usefile, output_path="C:/OutputFolder/Output.csv", output_format="csv", pages ="%s" % page)
             self.statusBar().showMessage('Converted')
 
-        except:
-            QMessageBox.information(self, 'WARNING!', "You should close the output file first!")
+        except:                        
+            QMessageBox.information(self, "WARNING", "Close the output file or Select the page!")
 
 
     def center(self):
@@ -105,6 +109,12 @@ class Converter(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
+    
+    
+    def make_directory(self):
+        directory = "C:/OutputFolder/"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
