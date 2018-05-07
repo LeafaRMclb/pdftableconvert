@@ -10,6 +10,8 @@ import sqlite3
 import time
 import datetime
 import tabula
+import csv
+
 #import image_qr
 #from pandas import read_sql
 
@@ -20,7 +22,7 @@ class Converter(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("PDFConverter")
+        self.setWindowTitle("pdftocsvconverter")
         #self.setWindowIcon(QIcon(":/logo_tracker.png"))
         self.resize(280, 170)
   
@@ -40,10 +42,12 @@ class Converter(QMainWindow):
         self.btn_getPages = QPushButton("Pages", self)
         self.btn_getPages.clicked.connect(self.getPages)
 
-
-
-
+        self.cb_time_series = QCheckBox('Split Single Cell Values', self)
+        self.cb_euro_delim = QCheckBox('Euro Delimiter', self)
         
+        #self.cb_time_series.stateChanged.connect(self.state_changed)
+        
+    
 
 
 
@@ -53,6 +57,10 @@ class Converter(QMainWindow):
         grid.addWidget(self.btn_convert, 3, 0)
         grid.addWidget(self.btn_showFile, 4, 0)
         grid.addWidget(self.btn_getPages, 2, 0)
+        grid.addWidget(self.cb_time_series, 5, 0)
+        grid.addWidget(self.cb_euro_delim, 6, 0)
+        
+        
 
         self.statusBar()
 
@@ -89,10 +97,17 @@ class Converter(QMainWindow):
 
     def showFile(self):
         try:
-            os.startfile("C:/OutputFolder/Output.csv")
-            self.statusBar().showMessage('')
-        except:
-            QMessageBox.information(self, 'Warning', "Output file not created!")
+            if self.cb_time_series.isChecked():
+                self.time_series()
+                os.startfile("C:/OutputFolder/log.csv")
+                
+            else:
+                os.startfile("C:/OutputFolder/Output.csv")
+                self.statusBar().showMessage('')
+            
+
+        except Exception as e:
+            QMessageBox.information(self, 'Warning', "%s" % e)
 
     def Convert(self):
         try:
@@ -115,6 +130,47 @@ class Converter(QMainWindow):
         directory = "C:/OutputFolder/"
         if not os.path.exists(directory):
             os.makedirs(directory)
+    
+    def state_changed(self):
+        if self.cb_time_series.isChecked():
+            self.time_series()
+            
+        else:
+            try:
+                os.remove("C:/OutputFolder/log.csv")
+            except:
+                QMessageBox.information(self, "WARNING", "Hint: Close the output file")
+
+#HELLO ROXANNE :)
+    #FEATURES
+    def time_series(self):
+        filename= "C:/OutputFolder/Output.csv"
+        logfile = "C:/OutputFolder/log.csv"
+        if os.path.exists(logfile):
+            os.remove(logfile)
+        with open("C:/OutputFolder/log.txt", "w", encoding="utf-8") as out_file:
+            with open(filename, "r") as in_file:
+                reader = csv.reader(in_file, quoting=csv.QUOTE_MINIMAL)
+                to_list = []
+                
+                for line in reader:
+                    to_list.append(" ".join(line) + "\n") #join items in a list using space                
+                to_str = []
+                
+                if self.cb_euro_delim.isChecked():                   
+                    for i in to_list:                                 
+                        to_str.append(i.replace(",",".")) #replace delimiter "," with blank to concatenate
+                else:
+                    for i in to_list:                                 
+                        to_str.append(i.replace(","," "))
+                    
+                to_text = []
+                for text in to_str:
+                    to_text.append(text.replace(" ",",")) #replace spaces to the natural delimiter ","
+                    #TO DO: use regex to find all text/dates/headers and then not include them on the text.replace(" ",",") exception.
+                    #hint: text.replace(" ",",") if text not in headers
+            out_file.writelines(to_text)
+        os.rename("C:/OutputFolder/log.txt", "C:/OutputFolder/log.csv")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
